@@ -1,0 +1,15 @@
+version: "3"
+services:
+  wiremock:
+    image: wiremock/wiremock:3.6.0-alpine
+    container_name: mock-rest-api
+    ports:
+    - 8080:8080
+    volumes:
+    - ./mock-rest-api/files:/home/wiremock/__files
+    - ./mock-rest-api/mappings:/home/wiremock/mappings
+    entrypoint:
+    - "/docker-entrypoint.sh"
+    - "--global-response-templating"
+    - "--disable-gzip"
+    - "--verbose"

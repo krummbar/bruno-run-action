@@ -1,0 +1,15 @@
+meta {
+  name: delete user invalid id
+  type: http
+  seq: 1
+}
+
+delete {
+  url: {{baseUrl}}/api/users/john
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 404
+}

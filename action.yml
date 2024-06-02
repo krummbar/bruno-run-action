@@ -1,21 +1,60 @@
-name: Hello, World!
-description: Greet someone and record the time
-author: GitHub Actions
+name: 'Bru collection/request runner'
+description: 'Executes Bru CLI against a collection or request.'
+author: 'Max Bauer @krummbar'
 
-# Define your inputs here.
+branding:
+  color: orange
+  icon: check-circle
+
 inputs:
-  who-to-greet:
-    description: Who to greet
-    required: true
-    default: World
+  path:
+    description: >-
+      Path of the target bruno collection.
+      Should point to the root directory of the collection.
+      If not provided it uses the current working directory.
+    required: false
+    default: .
+  filename:
+    description: >-
+      File or folder name of the requests to run.
+      It is relative to the `path` input.
+    required: false
+  recursive:
+    description: Indicate a recursive run
+    required: false
+    default: 'false'
+  env:
+    description: Select a collection environment
+    required: false
+    default: ''
+  envVars:
+    description: List of environment variables to set with the run
+    required: false
+    default: ''
+  output:
+    description: Output file containing test results
+    required: false
+  outputFormat:
+    description: >-
+      The output format of the test results.
+      Possible values 'html|json|junit'
+    required: false
+    default: 'json'
+  insecure:
+    description: Allow insecure server connections
+    required: false
+    default: 'false'
+  testsOnly:
+    description: 'Only run requests that have a test'
+    required: false
+  bail:
+    description: 'Stop execution after a failure of a request, test, or assertion'
+    required: false
 
-# Define your outputs here.
 outputs:
-  time:
-    description: The time we greeted you
+  success:
+    description: 'Indicates test run success status'
 
 runs:
   using: docker
   image: Dockerfile
-  env:
-    INPUT_WHO_TO_GREET: ${{ inputs.who-to-greet }}

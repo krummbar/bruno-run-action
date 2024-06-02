@@ -1,0 +1,24 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/api/users",
+    "bodyPatterns": [
+      {
+        "matchesJsonPath": "$.name"
+      }
+    ],
+    "headers": {
+      "Authentication": {
+        "equalTo": "cicd-supersecret-key"
+      }
+    }
+  },
+  "response": {
+    "status": 201,
+    "body": "{\"userId\": 2}",
+    "transformers": ["response-template"],
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

@@ -24,7 +24,8 @@ jobs:
           - 5001:5000
 
     env:
-      TEST_TAG: localhost:5001/actions/hello-world-docer-action:latest
+      TEST_TAG: localhost:5001/actions/bruno-action:latest
+      RUN_OUTPUT: run-output.log
 
     steps:
       - name: Checkout
@@ -48,28 +49,84 @@ jobs:
 
       - name: Run the Container
         id: run
-        env:
-          INPUT_WHO_TO_GREET: Mona Lisa Octocat
-        run: |
-          docker run \
-            --env INPUT_WHO_TO_GREET="${{ env.INPUT_WHO_TO_GREET }}" \
-            --rm ${{ env.TEST_TAG }}
+        run: >-
+          docker run
+          --env BRUNO_ACTION_DRY_RUN=true
+          --env INPUT_PATH="./"
+          --env INPUT_FILENAME=users/get-user.bru
+          --env INPUT_RECURSIVE=true
+          --env INPUT_ENV="cicd"
+          --env INPUT_ENVVARS="apikey=mypassword"
+          --env INPUT_OUTPUT=output.html
+          --env INPUT_OUTPUTFORMAT=html
+          --env INPUT_INSECURE=true
+          --env INPUT_TESTSONLY=true
+          --env INPUT_BAIL=true
+          --rm ${{ env.TEST_TAG }}
+          > ${{ env.RUN_OUTPUT }}
 
-  test-action:
+      - name: Assert output
+        id: assert
+        run: >-
+          cat ${{ env.RUN_OUTPUT }}
+          && grep -q 'run users/get-user.bru' ${{ env.RUN_OUTPUT }}
+          && grep -q '\-\-env cicd' ${{ env.RUN_OUTPUT }}
+          && grep -q '\-r' ${{ env.RUN_OUTPUT }}
+          && grep -q '\-\-env cicd' ${{ env.RUN_OUTPUT }}
+          && grep -q '\-\-env\-var apikey=mypassword' ${{ env.RUN_OUTPUT }}
+          && grep -q '\-\-output output.html' ${{ env.RUN_OUTPUT }}
+          && grep -q '\-\-format html' ${{ env.RUN_OUTPUT }}
+          && grep -q '\-\-insecure' ${{ env.RUN_OUTPUT }}
+          && grep -q '\-\-tests\-only' ${{ env.RUN_OUTPUT }}
+          && grep -q '\-\-bail' ${{ env.RUN_OUTPUT }}
+
+
+  bru-run-successfully:
     name: GitHub Actions Test
     runs-on: ubuntu-latest
-
+    services:
+      mock-api:
+        image: wiremock/wiremock:3.6.0-alpine
+        volumes:
+          - ${{ github.workspace}}/.github/ci-resources/mock-rest-api/files:/home/wiremock/__files
+          - ${{ github.workspace}}/.github/ci-resources/mock-rest-api/mappings:/home/wiremock/mappings
+        ports:
+          - 8080:8080
     steps:
       - name: Checkout
         id: checkout
         uses: actions/checkout@v4
 
+      # - name: Start Mock API
+      #   working-directory: .github/ci-resources
+      #   run: docker compose up -d
+
       - name: Test Local Action
-        id: test-action
+        id: bru-run
         uses: ./
         with:
-          who-to-greet: Mona Lisa Octocat
+          path: .github/ci-resources/bruno-action-tests
+          recursive: true
+          env: cicd
+          envVars: |-
+            apiKey=cicd-supersecret-key
+            xAdminKey=admin-key
+          output: bru-run-output.json
+          outputFormat: json
+          insecure: true
+          testsOnly: false
+          bail: false
 
       - name: Print Output
         id: output
-        run: echo "${{ steps.test-action.outputs.time }}"
+        if: always()
+        run: |
+          echo "success=${{ steps.bru-run.outputs.success }}"
+          ls -al
+          ls -al .github/ci-resources/bruno-action-tests
+          cat .github/ci-resources/bruno-action-tests/bru-run-output.json
+
+      # - name: Stop Mock API
+      #   if: always()
+      #   working-directory: .github/ci-resources
+      #   run: docker compose down

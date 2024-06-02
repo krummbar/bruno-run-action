@@ -1,5 +1,11 @@
 # Set the base image to use for subsequent instructions
-FROM alpine:3.20
+FROM node:lts-alpine3.20
+
+# bash is required for entrypoint.sh
+RUN apk add --no-cache bash
+
+# Install bruno cli
+RUN npm install -g @usebruno/cli@latest
 
 # Set the working directory inside the container
 WORKDIR /usr/src

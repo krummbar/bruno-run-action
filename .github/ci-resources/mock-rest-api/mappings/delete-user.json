@@ -1,0 +1,19 @@
+{
+  "request": {
+    "method": "DELETE",
+    "urlPathTemplate": "/api/users/{userId}",
+    "pathParameters": {
+      "userId": {
+        "matches": "^\\d+$"
+      }
+    },
+    "headers": {
+      "Authentication": {
+        "equalTo": "cicd-supersecret-key"
+      }
+    }
+  },
+  "response": {
+    "status": 204
+  }
+}
