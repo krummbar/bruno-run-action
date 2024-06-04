@@ -82,51 +82,59 @@ jobs:
 
 
   bru-run-successfully:
-    name: GitHub Actions Test
+    name: Action Successful Run
     runs-on: ubuntu-latest
-    services:
-      mock-api:
-        image: wiremock/wiremock:3.6.0-alpine
-        volumes:
-          - ${{ github.workspace}}/.github/ci-resources/mock-rest-api/files:/home/wiremock/__files
-          - ${{ github.workspace}}/.github/ci-resources/mock-rest-api/mappings:/home/wiremock/mappings
-        ports:
-          - 8080:8080
     steps:
       - name: Checkout
         id: checkout
         uses: actions/checkout@v4
 
-      # - name: Start Mock API
-      #   working-directory: .github/ci-resources
-      #   run: docker compose up -d
-
       - name: Test Local Action
         id: bru-run
         uses: ./
         with:
-          path: .github/ci-resources/bruno-action-tests
-          recursive: true
+          path: .github/bruno-collection
           env: cicd
           envVars: |-
-            apiKey=cicd-supersecret-key
-            xAdminKey=admin-key
+            secretKey=hello
+            secretMessage='secret world!'
           output: bru-run-output.json
           outputFormat: json
           insecure: true
           testsOnly: false
           bail: false
 
+      # TODO assert outputs
       - name: Print Output
         id: output
         if: always()
         run: |
           echo "success=${{ steps.bru-run.outputs.success }}"
           ls -al
-          ls -al .github/ci-resources/bruno-action-tests
-          cat .github/ci-resources/bruno-action-tests/bru-run-output.json
+          ls -al .github/bruno-collection
+          cat .github/bruno-collection/bru-run-output.json
 
-      # - name: Stop Mock API
-      #   if: always()
-      #   working-directory: .github/ci-resources
-      #   run: docker compose down
+  bru-run-failure:
+    name: Action Failure Run
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@v4
+
+      - name: Test Local Action
+        id: bru-run
+        continue-on-error: true
+        uses: ./
+        with:
+          path: .github/bruno-collection
+          testsOnly: false
+          bail: true
+
+      - name: Succeed on Failure
+        if: ${{ steps.bru-run.outputs.success == 'false' }}
+        run: exit 0
+
+      - name: Fail on Success
+        if: ${{ steps.bru-run.outputs.success == 'true' }}
+        run: exit 1

@@ -67,6 +67,9 @@ if [ -n "${dry_run}" ]; then
   exit 0
 fi
 
+
+echo "::notice::bru run ${bru_args}"
+
 # Execute 'bru run ...' and evaluate execution status
 if eval "bru run ${bru_args}"; then
   echo "::notice::bru run succeeded."

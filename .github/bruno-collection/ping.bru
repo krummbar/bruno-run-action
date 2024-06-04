@@ -1,0 +1,27 @@
+meta {
+  name: ping
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{host}}/ping
+  body: none
+  auth: none
+}
+
+vars:pre-request {
+  pong: pong
+}
+
+assert {
+  res.status: eq 200
+  ~res.body: eq {{pong}}
+}
+
+tests {
+  test("should ping pong", function() {
+    const data = res.getBody();
+    expect(data).to.equal(bru.getVar("pong"));
+  });
+}

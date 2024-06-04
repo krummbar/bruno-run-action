@@ -7,6 +7,16 @@ branding:
   icon: check-circle
 
 inputs:
+  # TODO is it even possible?
+  # version:
+  #   description: Specify the used bru cli version
+  #   required: false
+  #   default: latest
+  # TODO optional attachment
+  # attachReport:
+  #   description: Attaches a execution report to the action run
+  #   default: 'true'
+  #   required: false
   path:
     description: >-
       Path of the target bruno collection.
@@ -23,6 +33,9 @@ inputs:
     description: Indicate a recursive run
     required: false
     default: 'false'
+  # caCert:
+  #   description: 'CA certificate to verify peer against'
+  #   required: false
   env:
     description: Select a collection environment
     required: false

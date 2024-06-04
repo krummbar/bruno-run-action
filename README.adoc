@@ -49,7 +49,6 @@ jobs:
 
 // TODO describe outputs# echo bru run
 
+== CI/CD
 
-== Development
-
-* xref::.github/ci-resources/README.adoc[CICD]
+// TODO
