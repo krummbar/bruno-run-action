@@ -4,7 +4,7 @@ author: 'Max Bauer @krummbar'
 
 branding:
   color: orange
-  icon: check-circle
+  icon: list
 
 inputs:
   # TODO is it even possible?
@@ -12,11 +12,6 @@ inputs:
   #   description: Specify the used bru cli version
   #   required: false
   #   default: latest
-  # TODO optional attachment
-  # attachReport:
-  #   description: Attaches a execution report to the action run
-  #   default: 'true'
-  #   required: false
   path:
     description: >-
       Path of the target bruno collection.
@@ -33,6 +28,7 @@ inputs:
     description: Indicate a recursive run
     required: false
     default: 'false'
+  # TODO
   # caCert:
   #   description: 'CA certificate to verify peer against'
   #   required: false

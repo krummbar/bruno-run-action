@@ -56,7 +56,7 @@ jobs:
           --env INPUT_FILENAME=users/get-user.bru
           --env INPUT_RECURSIVE=true
           --env INPUT_ENV="cicd"
-          --env INPUT_ENVVARS="apikey=mypassword"
+          --env INPUT_ENVVARS="apikey=myPassword\nid=myId"
           --env INPUT_OUTPUT=output.html
           --env INPUT_OUTPUTFORMAT=html
           --env INPUT_INSECURE=true
@@ -67,18 +67,18 @@ jobs:
 
       - name: Assert output
         id: assert
-        run: >-
+        run: |
           cat ${{ env.RUN_OUTPUT }}
-          && grep -q 'run users/get-user.bru' ${{ env.RUN_OUTPUT }}
-          && grep -q '\-\-env cicd' ${{ env.RUN_OUTPUT }}
-          && grep -q '\-r' ${{ env.RUN_OUTPUT }}
-          && grep -q '\-\-env cicd' ${{ env.RUN_OUTPUT }}
-          && grep -q '\-\-env\-var apikey=mypassword' ${{ env.RUN_OUTPUT }}
-          && grep -q '\-\-output output.html' ${{ env.RUN_OUTPUT }}
-          && grep -q '\-\-format html' ${{ env.RUN_OUTPUT }}
-          && grep -q '\-\-insecure' ${{ env.RUN_OUTPUT }}
-          && grep -q '\-\-tests\-only' ${{ env.RUN_OUTPUT }}
-          && grep -q '\-\-bail' ${{ env.RUN_OUTPUT }}
+          grep -q 'run users/get-user.bru' ${{ env.RUN_OUTPUT }}          || (echo '::error::incorrect collection path'       && exit 1)
+          grep -q '\-r' ${{ env.RUN_OUTPUT }}                             || (echo '::error::-r was not supplied'             && exit 1)
+          grep -q '\-\-env cicd' ${{ env.RUN_OUTPUT }}                    || (echo '::error::incorrect --env supplied'        && exit 1)
+          grep -q '\-\-env\-var apikey=myPassword' ${{ env.RUN_OUTPUT }}  || (echo '::error::incorrect --env-var for apikey'  && exit 1)
+          grep -q '\-\-env\-var id=myId' ${{ env.RUN_OUTPUT }}            || (echo '::error::incorrect --env-var for id'      && exit 1)
+          grep -q '\-\-output /usr/src/output.html' ${{ env.RUN_OUTPUT }} || (echo '::error::incorrect --output path'         && exit 1)
+          grep -q '\-\-format html' ${{ env.RUN_OUTPUT }}                 || (echo '::error::incorrect --format'              && exit 1)
+          grep -q '\-\-insecure' ${{ env.RUN_OUTPUT }}                    || (echo '::error::--insecure was not applied'      && exit 1)
+          grep -q '\-\-tests\-only' ${{ env.RUN_OUTPUT }}                 || (echo '::error::--tests-only was not supplied'   && exit 1)
+          grep -q '\-\-bail' ${{ env.RUN_OUTPUT }}                        || (echo '::error::--bail was not supplied'         && exit 1)
 
 
   bru-run-successfully:
@@ -96,23 +96,21 @@ jobs:
           path: .github/bruno-collection
           env: cicd
           envVars: |-
-            secretKey=hello
-            secretMessage='secret world!'
+            secretKey='${{ secrets.CI_TEST_SECRET_KEY }}'
+            secretMessage='${{ secrets.CI_TEST_SECRET_MESSAGE }}'
           output: bru-run-output.json
           outputFormat: json
           insecure: true
           testsOnly: false
           bail: false
 
-      # TODO assert outputs
-      - name: Print Output
-        id: output
-        if: always()
-        run: |
-          echo "success=${{ steps.bru-run.outputs.success }}"
-          ls -al
-          ls -al .github/bruno-collection
-          cat .github/bruno-collection/bru-run-output.json
+      - name: Succeed if run was successful
+        if: ${{ steps.bru-run.outputs.success == 'true' }}
+        run: exit 0
+
+      - name: Fail if run was not successful
+        if: ${{ steps.bru-run.outputs.success == 'false' }}
+        run: exit 1
 
   bru-run-failure:
     name: Action Failure Run
@@ -131,10 +129,10 @@ jobs:
           testsOnly: false
           bail: true
 
-      - name: Succeed on Failure
+      - name: Succeed if run was not successful
         if: ${{ steps.bru-run.outputs.success == 'false' }}
         run: exit 0
 
-      - name: Fail on Success
+      - name: Fail if run was successful
         if: ${{ steps.bru-run.outputs.success == 'true' }}
         run: exit 1
