@@ -1,6 +1,6 @@
 {
   "version": "1",
-  "name": "bruno-action-tests",
+  "name": "bruno-run-action-tests",
   "type": "collection",
   "ignore": [
     "node_modules",

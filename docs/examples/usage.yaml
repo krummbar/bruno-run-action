@@ -1,0 +1,21 @@
+name: Bruno Test Collection
+
+on:
+  workflow_dispatch:
+
+jobs:
+  bruno-tests:
+    name: Bruno test collection
+    runs-on: ubuntu-latest
+    steps:
+      - name: Bruno CLI runner
+        id: bru-cli
+        uses: krummbar/bruno-run-action@main # <1>
+        with:
+          path: bruno/api-it
+          env: integration
+          envVars: |- # <2>
+            foo=bar
+            say='${{ secrets.MESSAGE }}'
+          output: output.json
+          outputFormat: json

@@ -24,7 +24,7 @@ jobs:
           - 5001:5000
 
     env:
-      TEST_TAG: localhost:5001/actions/bruno-action:latest
+      TEST_TAG: localhost:5001/actions/bruno-run-action:latest
       RUN_OUTPUT: run-output.log
 
     steps:
@@ -49,21 +49,7 @@ jobs:
 
       - name: Run the Container
         id: run
-        run: >-
-          docker run
-          --env BRUNO_ACTION_DRY_RUN=true
-          --env INPUT_PATH="./"
-          --env INPUT_FILENAME=users/get-user.bru
-          --env INPUT_RECURSIVE=true
-          --env INPUT_ENV="cicd"
-          --env INPUT_ENVVARS="apikey=myPassword\nid=myId"
-          --env INPUT_OUTPUT=output.html
-          --env INPUT_OUTPUTFORMAT=html
-          --env INPUT_INSECURE=true
-          --env INPUT_TESTSONLY=true
-          --env INPUT_BAIL=true
-          --rm ${{ env.TEST_TAG }}
-          > ${{ env.RUN_OUTPUT }}
+        run: docker run --env-file .github/workflows/ci.env --rm ${{ env.TEST_TAG }} > ${{ env.RUN_OUTPUT }}
 
       - name: Assert output
         id: assert
@@ -76,6 +62,7 @@ jobs:
           grep -q '\-\-env\-var id=myId' ${{ env.RUN_OUTPUT }}            || (echo '::error::incorrect --env-var for id'      && exit 1)
           grep -q '\-\-output /usr/src/output.html' ${{ env.RUN_OUTPUT }} || (echo '::error::incorrect --output path'         && exit 1)
           grep -q '\-\-format html' ${{ env.RUN_OUTPUT }}                 || (echo '::error::incorrect --format'              && exit 1)
+          grep -q '\-\-cacert customcert.pem' ${{ env.RUN_OUTPUT }}       || (echo '::error::incorrect --ca-cert path'        && exit 1)
           grep -q '\-\-insecure' ${{ env.RUN_OUTPUT }}                    || (echo '::error::--insecure was not applied'      && exit 1)
           grep -q '\-\-tests\-only' ${{ env.RUN_OUTPUT }}                 || (echo '::error::--tests-only was not supplied'   && exit 1)
           grep -q '\-\-bail' ${{ env.RUN_OUTPUT }}                        || (echo '::error::--bail was not supplied'         && exit 1)

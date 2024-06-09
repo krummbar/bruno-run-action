@@ -1,0 +1,18 @@
+= Documentation
+:url-asciidoctor: https://docs.asciidoctor.org/asciidoc/latest/
+:url-asciidoctor-reducer: https://github.com/asciidoctor/asciidoctor-reducer
+
+The `README.adoc` file is generated from the sources in the link:docs[docs] folder.
+Any documentation changes must be applied to the files located in there.
+
+Prerequisites::
+* {url-asciidoctor}[AsciiDoc]
+* {url-asciidoctor-reducer}[AsciiDoctor Reducer]
+
+In order to update the contents of the `README.adoc` run the following command.
+
+.Update README.adoc
+[source,console]
+----
+asciidoctor-reducer --preserve-conditionals -o README.adoc docs/index.adoc
+----

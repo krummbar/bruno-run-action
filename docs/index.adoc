@@ -1,0 +1,35 @@
+= Bruno Run Action
+include::edit-advise.adoc[]
+:source-highlighter: highlight.js
+:toc: macro
+:icons: font
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
+:action-badge-ci: https://github.com/krummbar/bruno-run-action/actions/workflows/ci.yml/badge.svg
+:action-badge-lint: https://github.com/krummbar/bruno-run-action/actions/workflows/linter.yml/badge.svg
+:url-action-ci: https://github.com/krummbar/bruno-run-action/actions/workflows/ci.yml
+:url-action-lint: https://github.com/krummbar/bruno-run-action/actions/workflows/linter.yml
+:url-bruno-cli: https://docs.usebruno.com/bru-cli/overview
+:url-bruno-npm: https://www.npmjs.com/package/@usebruno/cli
+
+image:{action-badge-ci}[Continuous Integration,link={url-action-ci}]
+image:{action-badge-lint}[Lint Codebase,link={url-action-lint}]
+
+Containerized GitHub Action executing {url-bruno-cli}[bruno cli] runner.
+Can be used to execute sanity checks and integration tests via bruno collections.
+It runs the {url-bruno-npm}[*latest*] bru version, passing input parameters to the command line tool.
+
+toc::[]
+
+include::usage.adoc[leveloffset=1]
+
+== Development
+
+include::test-local.adoc[leveloffset=2]
+
+include::documentation.adoc[leveloffset=2]

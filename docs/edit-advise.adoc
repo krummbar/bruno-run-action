@@ -1,0 +1,7 @@
+// ############################################################
+// ATTENTION!
+// ----------
+// Do not edit the README.adoc file. It is generated from the sources
+// located in the /docs folder. The root file for the documentation is
+// /docs/index.adoc
+// ############################################################

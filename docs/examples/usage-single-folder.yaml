@@ -1,0 +1,17 @@
+name: Bruno Run Individual Folder
+
+on:
+  workflow_dispatch:
+
+jobs:
+  bruno-tests:
+    name: Bruno test collection
+    runs-on: ubuntu-latest
+    steps:
+      - name: Bruno CLI runner
+        id: bru-cli
+        uses: krummbar/bruno-run-action@main
+        with:
+          path: bruno/api-it # <1>
+          filename: echo # <2>
+          recursive: true # <3>

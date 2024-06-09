@@ -1,17 +1,47 @@
-= Bruno Action
-:action-badge-ci: https://github.com/krummbar/bruno-action/actions/workflows/ci.yml/badge.svg
-:action-badge-lint: https://github.com/krummbar/bruno-action/actions/workflows/linter.yml/badge.svg
-:url-action-ci: https://github.com/krummbar/bruno-action/actions/workflows/ci.yml
-:url-action-lint: https://github.com/krummbar/bruno-action/actions/workflows/linter.yml
+= Bruno Run Action
+// ############################################################
+// ATTENTION!
+// ----------
+// Do not edit the README.adoc file. It is generated from the sources
+// located in the /docs folder. The root file for the documentation is
+// /docs/index.adoc
+// ############################################################
+:source-highlighter: highlight.js
+:toc: macro
+:icons: font
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
+:action-badge-ci: https://github.com/krummbar/bruno-run-action/actions/workflows/ci.yml/badge.svg
+:action-badge-lint: https://github.com/krummbar/bruno-run-action/actions/workflows/linter.yml/badge.svg
+:url-action-ci: https://github.com/krummbar/bruno-run-action/actions/workflows/ci.yml
+:url-action-lint: https://github.com/krummbar/bruno-run-action/actions/workflows/linter.yml
+:url-bruno-cli: https://docs.usebruno.com/bru-cli/overview
+:url-bruno-npm: https://www.npmjs.com/package/@usebruno/cli
 
 image:{action-badge-ci}[Continuous Integration,link={url-action-ci}]
 image:{action-badge-lint}[Lint Codebase,link={url-action-lint}]
 
-GitHub Action executing bruno cli runner.
-// TODO add bruno link
+Containerized GitHub Action executing {url-bruno-cli}[bruno cli] runner.
+Can be used to execute sanity checks and integration tests via bruno collections.
+It runs the {url-bruno-npm}[*latest*] bru version, passing input parameters to the command line tool.
 
-== Usage
+toc::[]
 
+:leveloffset: 1
+
+= Usage
+
+The following example runs a collection located in the folder `bruno/api-it`.
+It uses the bruno environment `integration`,
+and provides the secret environment variables `foo=bar` and `say=hello`.
+The runner results are dumped to the JSON file `./output.json`.
+
+.Run full collection with secrets
 [source,yaml]
 ----
 name: Bruno Test Collection
@@ -24,31 +54,185 @@ jobs:
     name: Bruno test collection
     runs-on: ubuntu-latest
     steps:
-      # Change @main to a specific commit SHA or version tag, e.g.:
-      # krummbar/bruno-action@e76147da8e5c81eaf017dede5645551d4b94427b
-      # krummbar/bruno-action@v1.2.3
       - name: Bruno CLI runner
         id: bru-cli
-        uses: krummbar/bruno-action@main
+        uses: krummbar/bruno-run-action@main # <1>
         with:
-          filename: path/to/your/collection
+          path: bruno/api-it
           env: integration
-          # envVars need to be separated with line breaks
-          envVars: |-
+          envVars: |- # <2>
             foo=bar
-            say=hello
+            say='${{ secrets.MESSAGE }}'
           output: output.json
           outputFormat: json
 ----
+<1> Change `@main` to a specific commit SHA or version tag, e.g.: +
+`krummbar/bruno-run-action@e76147da8e5c81eaf017dede5645551d4b94427b` +
+`krummbar/bruno-run-action@v0.1.0`
+<2> envVars need to be separated with line breaks
 
-=== Inputs
+.Run single request
+[source,yaml]
+----
+name: Bruno Run Individual Folder
 
-// TODO describe inputs
+on:
+  workflow_dispatch:
 
-=== Outputs
+jobs:
+  bruno-tests:
+    name: Bruno test collection
+    runs-on: ubuntu-latest
+    steps:
+      - name: Bruno CLI runner
+        id: bru-cli
+        uses: krummbar/bruno-run-action@main
+        with:
+          path: bruno/api-it # <1>
+          filename: echo # <2>
+          recursive: true # <3>
+----
+<1> Path to bruno collection
+<2> Relative path of the request folder inside the collection
+<3> Includes all requests in subfolders
 
-// TODO describe outputs# echo bru run
+== Inputs
 
-== CI/CD
+[source,yaml]
+----
+path:
+  description: >-
+    Path of the target bruno collection.
+    Should point to the root directory of the collection.
+    If not provided it uses the current working directory.
+  required: false
+  default: .
+filename:
+  description: >-
+    File or folder name of the requests to run.
+    It is relative to the `path` input.
+  required: false
+recursive:
+  description: Indicate a recursive run.
+  required: false
+  default: 'false'
+caCert:
+  description: CA certificate to verify peer against.
+  required: false
+env:
+  description: Select a collection environment.
+  required: false
+  default: ''
+envVars:
+  description: List of environment variables to set with the run.
+  required: false
+  default: ''
+output:
+  description: >-
+    Output file containing test results.
+    The path is relative to the current working-directory and not to the targeted bruno collection.
+  required: false
+outputFormat:
+  description: >-
+    The output format of the test results.
+    Possible values `html|json|junit`.
+  required: false
+  default: json
+insecure:
+  description: Allow insecure server connections.
+  required: false
+  default: 'false'
+testsOnly:
+  description: Only run requests that have a test.
+  required: false
+bail:
+  description: Stop execution after a failure of a request, test, or assertion.
+  required: false
+----
 
-// TODO
+== Outputs
+
+[source,yaml]
+----
+success:
+  description: Indicates test run success status.
+----
+
+:leveloffset!:
+
+== Development
+
+:leveloffset: 2
+
+= Test Locally
+
+After you've cloned the repository to your local machine or codespace, you'll
+need to perform some initial setup steps before you can test your action.
+
+[NOTE]
+====
+You'll need to have a reasonably modern version of
+https://www.docker.com/get-started/[Docker] handy (e.g. docker engine
+version 20 or later).
+====
+
+. :hammer_and_wrench: Build the container
++
+[source,console]
+----
+docker build -t bruno-run-action-local .
+----
+
+. :white_check_mark: Test the container
++
+You can pass individual environment variables using the `--env` or `-e` flag.
++
+[source,console]
+----
+$ docker run --env INPUT_PATH=".github/bruno-collection" --env INPUT_ENV="cicd" --env BRUNO_ACTION_DRY_RUN="true" -v ${PWD}:/usr/src bruno-run-action-local
+::notice::collection directory: '/usr/src/.github/bruno-collection'
+::notice::bru run  --env cicd
+::notice::Executed in dry mode, skipped executing bruno collection
+----
++
+Or you can pass a file with environment variables using `--env-file`.
++
+[source,console]
+----
+$ docker run --env-file .github/workflows/ci.env -v ${PWD}/.github:/usr/src/.github bruno-run-action-local
+::notice::collection directory: '/usr/src/.github/bruno-collection'
+::notice::bru run users/get-user.bru -r --env cicd --output /usr/src/output.html --format html --insecure --tests-only --bail --env-var apikey=myPassword --env-var id=myId
+::notice::Executed in dry mode, skipped executing bruno collection
+----
++
+[TIP]
+====
+If `BRUNO_ACTION_DRY_RUN=true` is provided,
+execution of the actual collection is skipped.
+Only the fully composed bru run command with all arguments is dumped.
+====
+
+:leveloffset!:
+
+:leveloffset: 2
+
+= Documentation
+:url-asciidoctor: https://docs.asciidoctor.org/asciidoc/latest/
+:url-asciidoctor-reducer: https://github.com/asciidoctor/asciidoctor-reducer
+
+The `README.adoc` file is generated from the sources in the link:docs[docs] folder.
+Any documentation changes must be applied to the files located in there.
+
+Prerequisites::
+* {url-asciidoctor}[AsciiDoc]
+* {url-asciidoctor-reducer}[AsciiDoctor Reducer]
+
+In order to update the contents of the `README.adoc` run the following command.
+
+.Update README.adoc
+[source,console]
+----
+asciidoctor-reducer --preserve-conditionals -o README.adoc docs/index.adoc
+----
+
+:leveloffset!:

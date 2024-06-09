@@ -1,0 +1,39 @@
+= Usage
+
+The following example runs a collection located in the folder `bruno/api-it`.
+It uses the bruno environment `integration`,
+and provides the secret environment variables `foo=bar` and `say=hello`.
+The runner results are dumped to the JSON file `./output.json`.
+
+.Run full collection with secrets
+[source,yaml]
+----
+include::examples/usage.yaml[]
+----
+<1> Change `@main` to a specific commit SHA or version tag, e.g.: +
+`krummbar/bruno-run-action@e76147da8e5c81eaf017dede5645551d4b94427b` +
+`krummbar/bruno-run-action@v0.1.0`
+<2> envVars need to be separated with line breaks
+
+.Run single request
+[source,yaml]
+----
+include::examples/usage-single-folder.yaml[]
+----
+<1> Path to bruno collection
+<2> Relative path of the request folder inside the collection
+<3> Includes all requests in subfolders
+
+== Inputs
+
+[source,yaml]
+----
+include::../action.yml[tag=inputs,indent=0]
+----
+
+== Outputs
+
+[source,yaml]
+----
+include::../action.yml[tag=outputs,indent=0]
+----

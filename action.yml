@@ -1,17 +1,12 @@
-name: 'Bru collection/request runner'
-description: 'Executes Bru CLI against a collection or request.'
-author: 'Max Bauer @krummbar'
-
+name: bruno-run-action
+description: Executes Bru CLI against a bruno collection or single request.
+author: Max Bauer
 branding:
   color: orange
   icon: list
 
 inputs:
-  # TODO is it even possible?
-  # version:
-  #   description: Specify the used bru cli version
-  #   required: false
-  #   default: latest
+  # tag::inputs[]
   path:
     description: >-
       Path of the target bruno collection.
@@ -25,44 +20,48 @@ inputs:
       It is relative to the `path` input.
     required: false
   recursive:
-    description: Indicate a recursive run
+    description: Indicate a recursive run.
     required: false
     default: 'false'
-  # TODO
-  # caCert:
-  #   description: 'CA certificate to verify peer against'
-  #   required: false
+  caCert:
+    description: CA certificate to verify peer against.
+    required: false
   env:
-    description: Select a collection environment
+    description: Select a collection environment.
     required: false
     default: ''
   envVars:
-    description: List of environment variables to set with the run
+    description: List of environment variables to set with the run.
     required: false
     default: ''
   output:
-    description: Output file containing test results
+    description: >-
+      Output file containing test results.
+      The path is relative to the current working-directory and not to the targeted bruno collection.
     required: false
   outputFormat:
     description: >-
       The output format of the test results.
-      Possible values 'html|json|junit'
+      Possible values `html|json|junit`.
     required: false
-    default: 'json'
+    default: json
   insecure:
-    description: Allow insecure server connections
+    description: Allow insecure server connections.
     required: false
     default: 'false'
   testsOnly:
-    description: 'Only run requests that have a test'
+    description: Only run requests that have a test.
     required: false
   bail:
-    description: 'Stop execution after a failure of a request, test, or assertion'
+    description: Stop execution after a failure of a request, test, or assertion.
     required: false
+  # end::inputs[]
 
 outputs:
+  # tag::outputs[]
   success:
-    description: 'Indicates test run success status'
+    description: Indicates test run success status.
+  # end::outputs[]
 
 runs:
   using: docker

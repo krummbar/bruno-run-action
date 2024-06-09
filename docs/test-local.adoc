@@ -1,0 +1,47 @@
+= Test Locally
+
+After you've cloned the repository to your local machine or codespace, you'll
+need to perform some initial setup steps before you can test your action.
+
+[NOTE]
+====
+You'll need to have a reasonably modern version of
+https://www.docker.com/get-started/[Docker] handy (e.g. docker engine
+version 20 or later).
+====
+
+. :hammer_and_wrench: Build the container
++
+[source,console]
+----
+docker build -t bruno-run-action-local .
+----
+
+. :white_check_mark: Test the container
++
+You can pass individual environment variables using the `--env` or `-e` flag.
++
+[source,console]
+----
+$ docker run --env INPUT_PATH=".github/bruno-collection" --env INPUT_ENV="cicd" --env BRUNO_ACTION_DRY_RUN="true" -v ${PWD}:/usr/src bruno-run-action-local
+::notice::collection directory: '/usr/src/.github/bruno-collection'
+::notice::bru run  --env cicd
+::notice::Executed in dry mode, skipped executing bruno collection
+----
++
+Or you can pass a file with environment variables using `--env-file`.
++
+[source,console]
+----
+$ docker run --env-file .github/workflows/ci.env -v ${PWD}/.github:/usr/src/.github bruno-run-action-local
+::notice::collection directory: '/usr/src/.github/bruno-collection'
+::notice::bru run users/get-user.bru -r --env cicd --output /usr/src/output.html --format html --insecure --tests-only --bail --env-var apikey=myPassword --env-var id=myId
+::notice::Executed in dry mode, skipped executing bruno collection
+----
++
+[TIP]
+====
+If `BRUNO_ACTION_DRY_RUN=true` is provided,
+execution of the actual collection is skipped.
+Only the fully composed bru run command with all arguments is dumped.
+====
