@@ -82,13 +82,13 @@ jobs:
         with:
           path: .github/bruno-collection
           env: cicd
-          envVars: |-
+          env-vars: |-
             secretKey='${{ secrets.CI_TEST_SECRET_KEY }}'
             secretMessage='${{ secrets.CI_TEST_SECRET_MESSAGE }}'
           output: bru-run-output.json
-          outputFormat: json
+          output-format: json
           insecure: true
-          testsOnly: false
+          tests-only: false
           bail: false
 
       - name: Succeed if run was successful
@@ -113,7 +113,7 @@ jobs:
         uses: ./
         with:
           path: .github/bruno-collection
-          testsOnly: false
+          tests-only: false
           bail: true
 
       - name: Succeed if run was not successful
