@@ -2,17 +2,17 @@
 dry_run="${BRUNO_ACTION_DRY_RUN}"
 
 function print_input {
-  echo "::debug::INPUT_PATH='${INPUT_PATH}'"
-  echo "::debug::INPUT_FILENAME='${INPUT_FILENAME}'"
-  echo "::debug::INPUT_RECURSIVE='${INPUT_RECURSIVE}'"
-  echo "::debug::INPUT_ENV='${INPUT_ENV}'"
-  echo "::debug::INPUT_ENVVARS='${INPUT_ENVVARS}'"
-  echo "::debug::INPUT_OUTPUT='${INPUT_OUTPUT}'"
-  echo "::debug::INPUT_OUTPUTFORMAT='${INPUT_OUTPUTFORMAT}'"
-  echo "::debug::INPUT_CACERT='${INPUT_CACERT}'"
-  echo "::debug::INPUT_INSECURE='${INPUT_INSECURE}'"
-  echo "::debug::INPUT_TESTSONLY='${INPUT_TESTSONLY}'"
-  echo "::debug::INPUT_BAIL='${INPUT_BAIL}'"
+  echo "::debug::IN_PATH='${IN_PATH}'"
+  echo "::debug::IN_FILENAME='${IN_FILENAME}'"
+  echo "::debug::IN_RECURSIVE='${IN_RECURSIVE}'"
+  echo "::debug::IN_ENV='${IN_ENV}'"
+  echo "::debug::IN_ENV_VARS='${IN_ENV_VARS}'"
+  echo "::debug::IN_OUTPUT='${IN_OUTPUT}'"
+  echo "::debug::IN_OUTPUT_FORMAT='${IN_OUTPUT_FORMAT}'"
+  echo "::debug::IN_CA_CERT='${IN_CA_CERT}'"
+  echo "::debug::IN_INSECURE='${IN_INSECURE}'"
+  echo "::debug::IN_TESTS_ONLY='${IN_TESTS_ONLY}'"
+  echo "::debug::IN_BAIL='${IN_BAIL}'"
   echo "::debug::DRY_RUN='${dry_run}'"
 }
 
@@ -52,48 +52,48 @@ function absolute_path {
 # Returns all CLI arguments as string
 function parse_bru_args {
   output_args=""
-  if [ -n "${INPUT_FILENAME}" ]; then
-    output_args="${INPUT_FILENAME}"
+  if [ -n "${IN_FILENAME}" ]; then
+    output_args="${IN_FILENAME}"
   fi
 
-  if [ -n "${INPUT_RECURSIVE}" ]; then
+  if [ -n "${IN_RECURSIVE}" ]; then
     output_args="${output_args} -r"
   fi
 
-  if [ -n "${INPUT_ENV}" ]; then
-    output_args="${output_args} --env ${INPUT_ENV}"
+  if [ -n "${IN_ENV}" ]; then
+    output_args="${output_args} --env ${IN_ENV}"
   fi
 
-  if [ -n "${INPUT_OUTPUT}" ]; then
-    output_args="${output_args} --output $(absolute_path "${INPUT_OUTPUT}")"
+  if [ -n "${IN_OUTPUT}" ]; then
+    output_args="${output_args} --output $(absolute_path "${IN_OUTPUT}")"
   fi
 
-  if [ -n "${INPUT_OUTPUTFORMAT}" ]; then
-    output_args="${output_args} --format ${INPUT_OUTPUTFORMAT}"
+  if [ -n "${IN_OUTPUT_FORMAT}" ]; then
+    output_args="${output_args} --format ${IN_OUTPUT_FORMAT}"
   fi
 
-  if [ -n "${INPUT_CACERT}" ]; then
-    output_args="${output_args} --cacert ${INPUT_CACERT}"
+  if [ -n "${IN_CA_CERT}" ]; then
+    output_args="${output_args} --cacert ${IN_CA_CERT}"
   fi
 
-  if [ -n "${INPUT_INSECURE}" ]; then
+  if [ -n "${IN_INSECURE}" ]; then
     output_args="${output_args} --insecure"
   fi
 
-  if [ -n "${INPUT_TESTSONLY}" ]; then
+  if [ -n "${IN_TESTS_ONLY}" ]; then
     output_args="${output_args} --tests-only"
   fi
 
-  if [ -n "${INPUT_BAIL}" ]; then
+  if [ -n "${IN_BAIL}" ]; then
     output_args="${output_args} --bail"
   fi
 
   # Assign --env-var key=value if provided
   # Key value pairs must be separated by line breaks
-  if [ -n "${INPUT_ENVVARS}" ]; then
+  if [ -n "${IN_ENV_VARS}" ]; then
     while read -r env_var; do
       output_args="${output_args} --env-var ${env_var}"
-    done < <(echo -e "${INPUT_ENVVARS}")
+    done < <(echo -e "${IN_ENV_VARS}")
   fi
   echo "${output_args}"
 }
@@ -107,8 +107,8 @@ function main {
   bru_args="$(parse_bru_args)"
 
   # Change to provided working directory
-  if [ -n "${INPUT_PATH}" ]; then
-    cd "${INPUT_PATH}" || exit_with 1 "The provided bruno collection path '${INPUT_PATH}' does not exist."
+  if [ -n "${IN_PATH}" ]; then
+    cd "${IN_PATH}" || exit_with 1 "The provided bruno collection path '${IN_PATH}' does not exist."
   fi
 
   # Dump current working directory

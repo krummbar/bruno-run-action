@@ -14,8 +14,8 @@ jobs:
         with:
           path: bruno/api-it
           env: integration
-          envVars: |- # <2>
+          env-vars: |- # <2>
             foo=bar
             say='${{ secrets.MESSAGE }}'
           output: output.json
-          outputFormat: json
+          output-format: json

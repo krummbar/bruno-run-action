@@ -60,11 +60,11 @@ jobs:
         with:
           path: bruno/api-it
           env: integration
-          envVars: |- # <2>
+          env-vars: |- # <2>
             foo=bar
             say='${{ secrets.MESSAGE }}'
           output: output.json
-          outputFormat: json
+          output-format: json
 ----
 <1> Change `@main` to a specific commit SHA or version tag, e.g.: +
 `krummbar/bruno-run-action@e76147da8e5c81eaf017dede5645551d4b94427b` +
@@ -116,14 +116,14 @@ recursive:
   description: Indicate a recursive run.
   required: false
   default: 'false'
-caCert:
+ca-cert:
   description: CA certificate to verify peer against.
   required: false
 env:
   description: Select a collection environment.
   required: false
   default: ''
-envVars:
+env-vars:
   description: List of environment variables to set with the run.
   required: false
   default: ''
@@ -132,7 +132,7 @@ output:
     Output file containing test results.
     The path is relative to the current working-directory and not to the targeted bruno collection.
   required: false
-outputFormat:
+output-format:
   description: >-
     The output format of the test results.
     Possible values `html|json|junit`.
@@ -142,7 +142,7 @@ insecure:
   description: Allow insecure server connections.
   required: false
   default: 'false'
-testsOnly:
+tests-only:
   description: Only run requests that have a test.
   required: false
 bail:
