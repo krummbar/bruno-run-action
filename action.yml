@@ -1,9 +1,9 @@
-name: bruno-run-action
+name: bru-run-action
 description: Executes Bru CLI against a bruno collection or single request.
 author: Max Bauer
 branding:
   color: orange
-  icon: list
+  icon: chevron-right
 
 inputs:
   # tag::inputs[]

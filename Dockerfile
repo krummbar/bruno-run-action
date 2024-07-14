@@ -5,7 +5,7 @@ FROM node:lts-alpine3.20
 RUN apk add --no-cache bash
 
 # Install bruno cli
-RUN npm install -g @usebruno/cli@latest
+RUN npm install -g @usebruno/cli@1.x
 
 # Set the working directory inside the container
 WORKDIR /usr/src
