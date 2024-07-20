@@ -2,6 +2,7 @@
 dry_run="${BRUNO_ACTION_DRY_RUN}"
 
 function print_input {
+  echo "::debug::IN_CSV_FILEPATH='${IN_CSV_FILEPATH}'"
   echo "::debug::IN_PATH='${IN_PATH}'"
   echo "::debug::IN_FILENAME='${IN_FILENAME}'"
   echo "::debug::IN_RECURSIVE='${IN_RECURSIVE}'"
@@ -88,6 +89,10 @@ function parse_bru_args {
     output_args="${output_args} --bail"
   fi
 
+  if [ -n "${IN_CSV_FILEPATH}" ]; then
+    output_args="${output_args} --csv-file-path $(absolute_path "${IN_CSV_FILEPATH}")"
+  fi
+
   # Assign --env-var key=value if provided
   # Key value pairs must be separated by line breaks
   if [ -n "${IN_ENV_VARS}" ]; then
@@ -104,6 +109,9 @@ function parse_bru_args {
 # Otherwise returns the exit code of the `bru run ...` command.
 function main {
   print_input
+  bru_version="$(bru --version)"
+  echo "::notice::bru version: ${bru_version}"
+  echo "bru-version='${bru_version}'" >>"${GITHUB_OUTPUT}"
   bru_args="$(parse_bru_args)"
 
   # Change to provided working directory
