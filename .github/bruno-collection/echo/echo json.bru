@@ -10,19 +10,6 @@ post {
   auth: none
 }
 
-headers {
-  foo: bar
-}
-
-auth:basic {
-  username: asd
-  password: j
-}
-
-auth:bearer {
-  token: 
-}
-
 body:json {
   {
     "hello": "bruno"
@@ -31,10 +18,6 @@ body:json {
 
 assert {
   res.status: eq 200
-}
-
-script:pre-request {
-  bru.setVar("foo", "foo-world-2");
 }
 
 tests {

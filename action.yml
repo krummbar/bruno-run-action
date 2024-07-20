@@ -7,6 +7,9 @@ branding:
 
 inputs:
   # tag::inputs[]
+  csv-file-path:
+    description: CSV file pat for input parameters
+    required: false
   path:
     description: >-
       Path of the target bruno collection.
@@ -61,12 +64,15 @@ outputs:
   # tag::outputs[]
   success:
     description: Indicates test run success status.
+  bru-version:
+    description: Bruno CLI version used during workflow execution.
   # end::outputs[]
 
 runs:
   using: docker
   image: Dockerfile
   env:
+    IN_CSV_FILEPATH: ${{ inputs.csv-file-path }}
     IN_PATH: ${{ inputs.path }}
     IN_FILENAME: ${{ inputs.filename }}
     IN_RECURSIVE: ${{ inputs.recursive }}

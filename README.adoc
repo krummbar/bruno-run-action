@@ -101,6 +101,9 @@ jobs:
 
 [source,yaml]
 ----
+csv-file-path:
+  description: CSV file pat for input parameters
+  required: false
 path:
   description: >-
     Path of the target bruno collection.
@@ -157,6 +160,8 @@ bail:
 ----
 success:
   description: Indicates test run success status.
+bru-version:
+  description: Bruno CLI version used during workflow execution.
 ----
 
 :leveloffset!:
