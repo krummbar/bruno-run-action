@@ -7,10 +7,11 @@ branding:
 
 inputs:
   # tag::inputs[]
-  csv-file-path:
+  gi:
     description: CSV file pat for input parameters
     required: false
   path:
+    # prettier-ignore
     description: >-
       Path of the target bruno collection.
       Should point to the root directory of the collection.
@@ -18,6 +19,7 @@ inputs:
     required: false
     default: .
   filename:
+    # prettier-ignore
     description: >-
       File or folder name of the requests to run.
       It is relative to the `path` input.
@@ -38,11 +40,13 @@ inputs:
     required: false
     default: ''
   output:
+    # prettier-ignore
     description: >-
       Output file containing test results.
       The path is relative to the current working-directory and not to the targeted bruno collection.
     required: false
   output-format:
+    # prettier-ignore
     description: >-
       The output format of the test results.
       Possible values `html|json|junit`.
