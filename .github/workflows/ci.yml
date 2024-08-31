@@ -47,6 +47,7 @@ jobs:
           push: true
           tags: ${{ env.TEST_TAG }}
 
+      # prettier-ignore
       - name: Run the Container
         id: run
         run: docker run --env-file .github/workflows/ci.env --rm ${{ env.TEST_TAG }} > ${{ env.RUN_OUTPUT }}
@@ -67,7 +68,6 @@ jobs:
           grep -q '\-\-tests\-only' ${{ env.RUN_OUTPUT }}                 || (echo '::error::--tests-only was not supplied'    && exit 1)
           grep -q '\-\-csv\-file\-path' ${{ env.RUN_OUTPUT }}             || (echo '::error::--csv-file-path was not supplied' && exit 1)
           grep -q '\-\-bail' ${{ env.RUN_OUTPUT }}                        || (echo '::error::--bail was not supplied'          && exit 1)
-
 
   bru-run-successfully:
     name: Action Successful Run
