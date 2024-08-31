@@ -7,7 +7,7 @@ branding:
 
 inputs:
   # tag::inputs[]
-  gi:
+  csv-file-path:
     description: CSV file pat for input parameters
     required: false
   path:
