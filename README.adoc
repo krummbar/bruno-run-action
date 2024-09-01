@@ -105,6 +105,7 @@ csv-file-path:
   description: CSV file pat for input parameters
   required: false
 path:
+  # prettier-ignore
   description: >-
     Path of the target bruno collection.
     Should point to the root directory of the collection.
@@ -112,6 +113,7 @@ path:
   required: false
   default: .
 filename:
+  # prettier-ignore
   description: >-
     File or folder name of the requests to run.
     It is relative to the `path` input.
@@ -131,12 +133,21 @@ env-vars:
   description: List of environment variables to set with the run.
   required: false
   default: ''
+ignore-truststore:
+  description: >-
+    The specified custom CA certificate (--cacert) will be used exclusively and the default truststore is ignored,
+    if this option is specified.
+    Evaluated in combination with "--cacert" only.
+  required: false
+  default: 'false'
 output:
+  # prettier-ignore
   description: >-
     Output file containing test results.
     The path is relative to the current working-directory and not to the targeted bruno collection.
   required: false
 output-format:
+  # prettier-ignore
   description: >-
     The output format of the test results.
     Possible values `html|json|junit`.
@@ -146,6 +157,12 @@ insecure:
   description: Allow insecure server connections.
   required: false
   default: 'false'
+sandbox:
+  description: >-
+    Javscript sandbox to use.
+    Available sandboxes are 'developer|safe'
+  required: false
+  default: ''
 tests-only:
   description: Only run requests that have a test.
   required: false

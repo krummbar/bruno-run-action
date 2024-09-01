@@ -57,18 +57,20 @@ jobs:
         id: assert
         run: |
           cat ${{ env.RUN_OUTPUT }}
-          grep -q 'run users/get-user.bru' ${{ env.RUN_OUTPUT }}          || (echo '::error::incorrect collection path'         && exit 1)
-          grep -q '\-r' ${{ env.RUN_OUTPUT }}                             || (echo '::error::-r was not supplied'               && exit 1)
-          grep -q '\-\-env cicd' ${{ env.RUN_OUTPUT }}                    || (echo '::error::incorrect --env supplied'          && exit 1)
-          grep -q '\-\-env\-var apikey=myPassword' ${{ env.RUN_OUTPUT }}  || (echo '::error::incorrect --env-var for apikey'    && exit 1)
-          grep -q '\-\-env\-var id=myId' ${{ env.RUN_OUTPUT }}            || (echo '::error::incorrect --env-var for id'        && exit 1)
-          grep -q '\-\-output /usr/src/output.html' ${{ env.RUN_OUTPUT }} || (echo '::error::incorrect --output path'           && exit 1)
-          grep -q '\-\-format html' ${{ env.RUN_OUTPUT }}                 || (echo '::error::incorrect --format'                && exit 1)
-          grep -q '\-\-cacert customcert.pem' ${{ env.RUN_OUTPUT }}       || (echo '::error::incorrect --ca-cert path'          && exit 1)
-          grep -q '\-\-insecure' ${{ env.RUN_OUTPUT }}                    || (echo '::error::--insecure was not applied'        && exit 1)
-          grep -q '\-\-tests\-only' ${{ env.RUN_OUTPUT }}                 || (echo '::error::--tests-only was not supplied'     && exit 1)
-          grep -q '\-\-csv\-file\-path' ${{ env.RUN_OUTPUT }}             || (echo '::error::--csv-file-path was not supplied'  && exit 1)
-          grep -q '\-\-bail' ${{ env.RUN_OUTPUT }}                        || (echo '::error::--bail was not supplied'           && exit 1)
+          grep -q 'run users/get-user.bru' ${{ env.RUN_OUTPUT }}          || (echo '::error::incorrect collection path'           && exit 1)
+          grep -q '\-r' ${{ env.RUN_OUTPUT }}                             || (echo '::error::-r was not supplied'                 && exit 1)
+          grep -q '\-\-ignore\-truststore' ${{ env.RUN_OUTPUT }}          || (echo '::error::--ignore-truststore was not applied' && exit 1)
+          grep -q '\-\-env cicd' ${{ env.RUN_OUTPUT }}                    || (echo '::error::incorrect --env supplied'            && exit 1)
+          grep -q '\-\-env\-var apikey=myPassword' ${{ env.RUN_OUTPUT }}  || (echo '::error::incorrect --env-var for apikey'      && exit 1)
+          grep -q '\-\-env\-var id=myId' ${{ env.RUN_OUTPUT }}            || (echo '::error::incorrect --env-var for id'          && exit 1)
+          grep -q '\-\-output /usr/src/output.html' ${{ env.RUN_OUTPUT }} || (echo '::error::incorrect --output path'             && exit 1)
+          grep -q '\-\-format html' ${{ env.RUN_OUTPUT }}                 || (echo '::error::incorrect --format'                  && exit 1)
+          grep -q '\-\-cacert customcert.pem' ${{ env.RUN_OUTPUT }}       || (echo '::error::incorrect --ca-cert path'            && exit 1)
+          grep -q '\-\-insecure' ${{ env.RUN_OUTPUT }}                    || (echo '::error::--insecure was not applied'          && exit 1)
+          grep -q '\-\-sandbox safe' ${{ env.RUN_OUTPUT }}                || (echo '::error::--sandbox was not supplied'          && exit 1)
+          grep -q '\-\-tests\-only' ${{ env.RUN_OUTPUT }}                 || (echo '::error::--tests-only was not supplied'       && exit 1)
+          grep -q '\-\-csv\-file\-path' ${{ env.RUN_OUTPUT }}             || (echo '::error::--csv-file-path was not supplied'    && exit 1)
+          grep -q '\-\-bail' ${{ env.RUN_OUTPUT }}                        || (echo '::error::--bail was not supplied'             && exit 1)
 
   bru-run-successfully:
     name: Action Successful Run

@@ -5,6 +5,7 @@ function print_input {
   echo "::debug::IN_CSV_FILEPATH='${IN_CSV_FILEPATH}'"
   echo "::debug::IN_PATH='${IN_PATH}'"
   echo "::debug::IN_FILENAME='${IN_FILENAME}'"
+  echo "::debug::IN_IGNORE_TRUSTSTORE='${IN_IGNORE_TRUSTSTORE}'"
   echo "::debug::IN_RECURSIVE='${IN_RECURSIVE}'"
   echo "::debug::IN_ENV='${IN_ENV}'"
   echo "::debug::IN_ENV_VARS='${IN_ENV_VARS}'"
@@ -12,6 +13,7 @@ function print_input {
   echo "::debug::IN_OUTPUT_FORMAT='${IN_OUTPUT_FORMAT}'"
   echo "::debug::IN_CA_CERT='${IN_CA_CERT}'"
   echo "::debug::IN_INSECURE='${IN_INSECURE}'"
+  echo "::debug::IN_SANDBOX='${IN_SANDBOX}'"
   echo "::debug::IN_TESTS_ONLY='${IN_TESTS_ONLY}'"
   echo "::debug::IN_BAIL='${IN_BAIL}'"
   echo "::debug::DRY_RUN='${dry_run}'"
@@ -65,6 +67,10 @@ function parse_bru_args {
     output_args="${output_args} --env ${IN_ENV}"
   fi
 
+  if [ -n "${IN_IGNORE_TRUSTSTORE}" ]; then
+    output_args="${output_args} --ignore-truststore"
+  fi
+
   if [ -n "${IN_OUTPUT}" ]; then
     output_args="${output_args} --output $(absolute_path "${IN_OUTPUT}")"
   fi
@@ -79,6 +85,10 @@ function parse_bru_args {
 
   if [ -n "${IN_INSECURE}" ]; then
     output_args="${output_args} --insecure"
+  fi
+
+  if [ -n "${IN_SANDBOX}" ]; then
+    output_args="${output_args} --sandbox ${IN_SANDBOX}"
   fi
 
   if [ -n "${IN_TESTS_ONLY}" ]; then

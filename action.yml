@@ -39,6 +39,14 @@ inputs:
     description: List of environment variables to set with the run.
     required: false
     default: ''
+  ignore-truststore:
+    # prettier-ignore
+    description: >-
+      The specified custom CA certificate (--cacert) will be used exclusively and the default truststore is ignored,
+      if this option is specified.
+      Evaluated in combination with "--cacert" only.
+    required: false
+    default: 'false'
   output:
     # prettier-ignore
     description: >-
@@ -56,6 +64,10 @@ inputs:
     description: Allow insecure server connections.
     required: false
     default: 'false'
+  sandbox:
+    description: Javscript sandbox to use. Available sandboxes are 'developer|safe'
+    required: false
+    default: ''
   tests-only:
     description: Only run requests that have a test.
     required: false
@@ -79,12 +91,14 @@ runs:
     IN_CSV_FILEPATH: ${{ inputs.csv-file-path }}
     IN_PATH: ${{ inputs.path }}
     IN_FILENAME: ${{ inputs.filename }}
+    IN_IGNORE_TRUSTSTORE: ${{ inputs.ignore-truststore }}
     IN_RECURSIVE: ${{ inputs.recursive }}
     IN_CA_CERT: ${{ inputs.ca-cert }}
     IN_ENV: ${{ inputs.env }}
     IN_ENV_VARS: ${{ inputs.env-vars }}
     IN_OUTPUT: ${{ inputs.output }}
     IN_OUTPUT_FORMAT: ${{ inputs.output-format }}
+    IN_SANDBOX: ${{ inputs.sandbox }}
     IN_INSECURE: ${{ inputs.insecure }}
     IN_TESTS_ONLY: ${{ inputs.tests-only }}
     IN_BAIL: ${{ inputs.bail }}
