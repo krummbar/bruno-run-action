@@ -67,7 +67,7 @@ function parse_bru_args {
     output_args="${output_args} --env ${IN_ENV}"
   fi
 
-  if [ -n "${IN_IGNORE_TRUSTSTORE}" ]; then
+  if [ "${IN_IGNORE_TRUSTSTORE}" == "true" ]; then
     output_args="${output_args} --ignore-truststore"
   fi
 
@@ -83,7 +83,7 @@ function parse_bru_args {
     output_args="${output_args} --cacert ${IN_CA_CERT}"
   fi
 
-  if [ -n "${IN_INSECURE}" ]; then
+  if [ "${IN_INSECURE}" == "true" ]; then
     output_args="${output_args} --insecure"
   fi
 
@@ -91,11 +91,11 @@ function parse_bru_args {
     output_args="${output_args} --sandbox ${IN_SANDBOX}"
   fi
 
-  if [ -n "${IN_TESTS_ONLY}" ]; then
+  if [ "${IN_TESTS_ONLY}" == "true" ]; then
     output_args="${output_args} --tests-only"
   fi
 
-  if [ -n "${IN_BAIL}" ]; then
+  if [ "${IN_BAIL}" == "true" ]; then
     output_args="${output_args} --bail"
   fi
 
