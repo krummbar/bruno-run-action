@@ -67,7 +67,6 @@ inputs:
   sandbox:
     description: Javscript sandbox to use. Available sandboxes are 'developer|safe'
     required: false
-    default: ''
   tests-only:
     description: Only run requests that have a test.
     required: false
